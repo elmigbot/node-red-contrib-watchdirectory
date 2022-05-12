@@ -9,6 +9,7 @@ module.exports = function(RED) {
     this.recursive = config.recursive;
     this.typeEvent = config.typeEvent;
     this.ignoreInitial = config.ignoreInitial;
+    this.usePolling = config.usePolling;
     this.ignoredFiles = config.ignoredFiles || false;
     this.startListening();  
   }
@@ -29,7 +30,7 @@ module.exports = function(RED) {
       depth: node.recursive,
       ignoreInitial: node.ignoreInitial,
       awaitWriteFinish:true,
-      usePolling:true,
+      usePolling: node.usePolling,
       alwaysStat: true,
       useFsEvents : true,
       binaryInterval: 1000
@@ -62,7 +63,7 @@ module.exports = function(RED) {
 
     watcher.on('ready', () => {
       setTimeout(() => {
-        node.status({fill:"yellow", shape: "ring", text: "Listening..."})
+        node.status({fill:"yellow", shape: "ring", text: "Listening to "+ node.folder})
       }, 10000)
     }).on('error', (err) => {
       node.status({fill:"red", shape: "dot", text: "Error : "+err.message})
